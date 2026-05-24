@@ -1,0 +1,41 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "backend/elearning/wsgi.py",
+      "use": "@vercel/python",
+      "config": {
+        "maxLambdaSize": "15mb"
+      }
+    },
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "backend/elearning/wsgi.py"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "backend/elearning/wsgi.py"
+    },
+    {
+      "src": "/static/(.*)",
+      "dest": "backend/elearning/wsgi.py"
+    },
+    {
+      "src": "/media/(.*)",
+      "dest": "backend/elearning/wsgi.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "frontend/$1"
+    }
+  ]
+}

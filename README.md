@@ -77,18 +77,21 @@ docker-compose down -v
 - **Database Seeding**: The backend `Dockerfile` runs a custom `seed_db` management command on startup, ensuring there is initial mock data to test the platform.
 - **Troubleshooting**: If a service fails to start or load, check the logs using `docker-compose logs <service_name>` (e.g., `docker-compose logs backend`).
 
-## ☁️ Deployment (Railway)
+## ☁️ Deployment (Vercel)
 
-Since the application is fully Dockerized, it can be easily deployed to [Railway.app](https://railway.app).
+The application is configured to be deployed as a **Serverless Monorepo** on [Vercel](https://vercel.com). The `vercel.json` configuration handles routing between the React frontend and the Django backend serverless functions.
 
 ### Steps to Deploy:
-1. Fork or push this repository to GitHub.
-2. Sign in to [Railway](https://railway.app) and click **"New Project"**.
-3. Select **"Deploy from GitHub repo"** and choose the repository.
-4. Railway will automatically detect the monorepo structure. 
-5. Click **"New" -> "Database" -> "Add PostgreSQL"** within the same Railway project to provision the database.
-6. Once the database is active, navigate to the Backend service settings in Railway and add the required environment variables. Railway provides a `DATABASE_URL` which can be used, or the variables (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`) can be mapped directly.
-7. Ensure the Backend has `DJANGO_ALLOWED_HOSTS` set to `*` or the specific frontend production URL.
-8. Set the `VITE_API_URL` environment variable in the Frontend service to point to the deployed Backend URL.
+1. Push this repository to GitHub.
+2. Sign in to [Vercel](https://vercel.com) and click **"Add New" -> "Project"**.
+3. Import this repository.
+4. Open the **"Environment Variables"** tab in Vercel and add your production database credentials (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`), as well as `DJANGO_SECRET_KEY` and `DJANGO_DEBUG=False`.
+5. Set `DJANGO_ALLOWED_HOSTS` to `.vercel.app` (or `*`).
+6. Open the **"Build & Development Settings"** tab and override the **Build Command** to:
+   ```bash
+   cd backend && sh build_files.sh && cd ../frontend && npm install && npm run build
+   ```
+7. Override the **Output Directory** to `frontend/dist`.
+8. Click **Deploy**! Vercel will automatically build the frontend, install the backend dependencies, and map the routes.
 
-Railway will build the Dockerfiles automatically and deploy the services.
+> **Note**: Serverless environments do not maintain persistent file systems. Database migrations (`python manage.py migrate`) must be run locally pointing to your production database, and Media file uploads require an external storage bucket like AWS S3 to be configured.
