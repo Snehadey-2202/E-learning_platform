@@ -77,18 +77,18 @@ docker-compose down -v
 - **Database Seeding**: The backend `Dockerfile` runs a custom `seed_db` management command on startup, ensuring you have initial mock data to test the platform.
 - **Troubleshooting**: If a service fails to start or load, you can check the logs using `docker-compose logs <service_name>` (e.g., `docker-compose logs backend`).
 
-## ☁️ Deployment (Render PaaS)
+## ☁️ Deployment (Railway)
 
-The project includes a `render.yaml` Blueprint file, which allows you to deploy the entire stack to [Render.com](https://render.com) easily.
+Since the application uses Docker, you can easily deploy it to [Railway.app](https://railway.app), which natively supports full-stack Docker deployments.
 
 ### Steps to Deploy:
-1. Push this repository to a GitHub, GitLab, or Bitbucket account.
-2. Sign in to Render and click **"New +" -> "Blueprint"**.
-3. Connect your repository.
-4. Render will automatically read the `render.yaml` file and provision:
-   - A Managed PostgreSQL Database
-   - A Web Service for the Django Backend
-   - A Web Service for the React/Nginx Frontend
-5. Click **"Apply"** and wait for the services to build and go live!
+1. Push this repository to GitHub.
+2. Sign in to [Railway](https://railway.app) and click **"New Project"**.
+3. Select **"Deploy from GitHub repo"** and choose this repository.
+4. Railway will automatically detect the structure. 
+5. Next, click **"New" -> "Database" -> "Add PostgreSQL"** within the same Railway project.
+6. Once the database is provisioned, go to your Backend service settings in Railway and add the environment variables matching your database (Railway provides a `DATABASE_URL` which you can use, or map the `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` variables directly from the Postgres variables).
+7. Ensure your Backend has `DJANGO_ALLOWED_HOSTS` set to `*` or your frontend URL.
+8. Set the `VITE_API_URL` environment variable in your Frontend service to point to the deployed Backend URL.
 
-> **Note**: For production, ensure you manage your secrets properly and restrict the `DJANGO_ALLOWED_HOSTS` or CORS settings appropriately to your live frontend URL.
+Railway will build your Dockerfiles automatically and deploy the services!
