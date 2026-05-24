@@ -1,13 +1,13 @@
-services:
+databases:
   # ---------------------------------------------
   # 1. PostgreSQL Database
   # ---------------------------------------------
-  - type: pgo
-    name: elearning-db
+  - name: elearning-db
     databaseName: elearning
     user: elearning_user
     plan: free
 
+services:
   # ---------------------------------------------
   # 2. Django Backend API
   # ---------------------------------------------
