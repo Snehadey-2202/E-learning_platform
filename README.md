@@ -85,7 +85,7 @@ The application is configured to be deployed as a **Serverless Monorepo** on [Ve
 1. Push this repository to GitHub.
 2. Sign in to [Vercel](https://vercel.com) and click **"Add New" -> "Project"**.
 3. Import this repository.
-4. Open the **"Environment Variables"** tab in Vercel and add your production database credentials (`DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`), as well as `DJANGO_SECRET_KEY` and `DJANGO_DEBUG=False`.
+4. Open the **"Environment Variables"** tab in Vercel and add your production database connection string (`DATABASE_URL`), as well as `DJANGO_SECRET_KEY` and `DJANGO_DEBUG=False`.
 5. Set `DJANGO_ALLOWED_HOSTS` to `.vercel.app` (or `*`).
 6. Open the **"Build & Development Settings"** tab and override the **Build Command** to:
    ```bash

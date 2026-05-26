@@ -1,9 +1,13 @@
 import os
 from pathlib import Path
 from datetime import timedelta
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Load environment variables from .env file
+load_dotenv(os.path.join(BASE_DIR.parent, '.env'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
@@ -66,24 +70,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'elearning.wsgi.application'
 
-# Database
-# Supports PostgreSQL when env variables are specified, otherwise falls back to SQLite
-DB_NAME = os.environ.get('DB_NAME')
-DB_USER = os.environ.get('DB_USER')
-DB_PASSWORD = os.environ.get('DB_PASSWORD')
-DB_HOST = os.environ.get('DB_HOST')
-DB_PORT = os.environ.get('DB_PORT', '5432')
+import dj_database_url
 
-if DB_NAME and DB_USER and DB_PASSWORD and DB_HOST:
+# Database
+# Supports PostgreSQL when DATABASE_URL is specified, otherwise falls back to SQLite
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': DB_NAME,
-            'USER': DB_USER,
-            'PASSWORD': DB_PASSWORD,
-            'HOST': DB_HOST,
-            'PORT': DB_PORT,
-        }
+        'default': dj_database_url.parse(DATABASE_URL)
     }
 else:
     DATABASES = {
@@ -92,6 +87,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
